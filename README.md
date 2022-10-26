@@ -24,6 +24,15 @@ npm run android
 npm run ios
 ```
 
+## Preview
+
+<p align="center">
+  <img alt="1" src="https://github.com/reefwn/quiz-app/blob/main/preview/1.png?raw=true" width="48%">
+  <img alt="2" src="https://github.com/reefwn/quiz-app/blob/main/preview/2.png?raw=true" width="48%">
+  <img alt="3" src="https://github.com/reefwn/quiz-app/blob/main/preview/3.png?raw=true" width="48%">
+  <img alt="4" src="https://github.com/reefwn/quiz-app/blob/main/preview/4.png?raw=true" width="48%">
+</p>
+
 ## Technologies & IDE
 
 <div>
