@@ -32,23 +32,27 @@ const QuizScreen = ({navigation, router}: any) => {
 
   const fetchQuestions = async () => {
     if (REACT_APP_MOCK_API === 'true') {
-      setQuestions(mockQuestions);
+      setQuestions(randomize(mockQuestions));
     } else {
       try {
         const json: QuestionResponse = await ky
-          .get('https://opentdb.com/api.php?amount=20&type=multiple')
+          .get('https://opentdb.com/api.php?amount=20&type=multiple', {})
           .json();
-        setQuestions(json.results);
+        setQuestions(randomize(json.results));
       } catch (error) {
         console.log('[fetchQuestions]:', error);
       }
     }
   };
 
+  function randomize<T>(arr: T[]) {
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
   const renderChoices = (question: Question) => {
     if (!isShuffled) {
       const mc = [question.correct_answer, ...question.incorrect_answers];
-      setChoices(mc.sort(() => Math.random() - 0.5));
+      setChoices(randomize(mc));
       setIsShuffled(true);
     }
     return choices.map(choice => (
