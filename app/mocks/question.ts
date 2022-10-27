@@ -1,4 +1,6 @@
-export const mockQuestions = [
+import {Question} from '../interfaces/question';
+
+export const mockQuestions: Question[] = [
   {
     category: 'Entertainment: Television',
     type: 'multiple',

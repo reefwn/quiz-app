@@ -2,15 +2,9 @@ import {REACT_APP_MOCK_API} from '@env';
 import ky from 'ky';
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {
-  Button,
-  Card,
-  Chip,
-  ProgressBar,
-  RadioButton,
-  Text,
-  TextInput,
-} from 'react-native-paper';
+import {Button, Chip, ProgressBar, TextInput} from 'react-native-paper';
+import QuizCard from '../components/QuizCard';
+import ScoreCard from '../components/ScoreCard';
 import {Question, QuestionResponse} from '../interfaces/question';
 import {mockQuestions} from '../mocks/question';
 import styles from '../styles/global';
@@ -19,8 +13,6 @@ const QuizScreen = ({navigation, router}: any) => {
   const [username, setUsername] = useState('');
   const [isUsernameConfirm, setIsUsernameConfirm] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [choices, setChoices] = useState<string[]>([]);
-  const [isShuffled, setIsShuffled] = useState(false);
   const [answer, setAnswer] = useState('');
   const [score, setScore] = useState(0);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -49,24 +41,11 @@ const QuizScreen = ({navigation, router}: any) => {
     return arr.sort(() => Math.random() - 0.5);
   }
 
-  const renderChoices = (question: Question) => {
-    if (!isShuffled) {
-      const mc = [question.correct_answer, ...question.incorrect_answers];
-      setChoices(randomize(mc));
-      setIsShuffled(true);
-    }
-    return choices.map(choice => (
-      <RadioButton.Item key={choice} label={choice} value={choice} />
-    ));
-  };
-
   const handleNext = () => {
     if (answer === questions[questionIndex].correct_answer) {
       setScore(score + 1);
     }
     setAnswer('');
-    setChoices([]);
-    setIsShuffled(false);
     if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
     } else {
@@ -75,8 +54,6 @@ const QuizScreen = ({navigation, router}: any) => {
   };
 
   const handleRetry = () => {
-    setChoices([]);
-    setIsShuffled(false);
     setAnswer('');
     setScore(0);
     setQuestionIndex(0);
@@ -104,31 +81,13 @@ const QuizScreen = ({navigation, router}: any) => {
             <ProgressBar progress={(questionIndex + 1) / questions.length} />
           </View>
           {!isFinished ? (
-            <Card style={styles.pt20} mode="contained">
-              <Card.Title
-                title={`${questionIndex + 1}. ${
-                  questions[questionIndex].question
-                }`}
-                titleNumberOfLines={5}
-              />
-              <Card.Content>
-                <RadioButton.Group
-                  onValueChange={value => setAnswer(value)}
-                  value={answer}>
-                  {renderChoices(questions[questionIndex])}
-                </RadioButton.Group>
-              </Card.Content>
-            </Card>
+            <QuizCard
+              index={questionIndex}
+              question={questions[questionIndex]}
+              onValueChange={value => setAnswer(value)}
+            />
           ) : (
-            <Card mode="contained">
-              <Card.Content>
-                <View style={styles.flexCenter}>
-                  <Text variant="titleSmall">
-                    Your Score is: <Text variant="titleLarge">{score}</Text>
-                  </Text>
-                </View>
-              </Card.Content>
-            </Card>
+            <ScoreCard score={score} />
           )}
           <View style={styles.mt20}>
             {!isFinished ? (
